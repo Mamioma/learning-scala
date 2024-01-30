@@ -30,4 +30,5 @@ class Person2(name: String, val age: Int) {
   // multiple constructors
   def this(name: String) = this(name, 0)
 
+
 }
