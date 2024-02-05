@@ -52,8 +52,6 @@ object Objects {
     println(Mary == John) // output: false, because they refer to the different instance
 
     val bobbie = person.apply(Mary, John)
-    
-    0
   }
   
 
