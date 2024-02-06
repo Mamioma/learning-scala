@@ -4,7 +4,7 @@ object InheritanceAndTraits extends App{
 
   // single class inheritance
   class Animal {
-    protected def eat = println("nomnom")
+    def eat = println("nomnom")
     val creatureType = "wild"
   }
 
@@ -24,22 +24,29 @@ object InheritanceAndTraits extends App{
   class Adult(name: String, age: Int, idCard: String) extends Person(name, age)
 
   // overriding
-  class Dog extends Animal {
-    override val creatureType: String = "domestic"
-    override def eat = println("crunch crunch")
+  class Dog(override val creatureType: String) extends Animal {
+    override def eat = {
+      super.eat
+      println("crunch crunch")
+    }
   }
 
-  val dog = new Dog
+  val dog = new Dog("K9")
   // if no override, then the protected method cannot be called outside the class
   dog.eat
   println(dog.creatureType)
-  
-  // type substitution
+
+  // type substitution (polymorphism)
   val unknownAnimal: Animal = new Dog("K9")
+  unknownAnimal.eat
+
+  // overRiding VS overLoading
+
+  // super
+
+  // preventing overrides
+  // 1 - use final on member: cannot be override
+  // 2 - use final on class: cannot be inheritance
+  // 3 - seal he class = extend classes in this file, prevent extension in other files
   
-
-
-
-
-
 }
