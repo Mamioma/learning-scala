@@ -29,7 +29,7 @@ abstract class MyList[+A] {
   def ++[B >: A](list: MyList[B]): MyList[B]
 }
 
-object EmptyList extends MyList[Nothing] {
+case object EmptyList extends MyList[Nothing] {
   override def head: Nothing = throw new NoSuchMethodError
   override def next: MyList[Nothing] = throw new NoSuchMethodError
   override def isEmpty: Boolean = true
@@ -42,7 +42,7 @@ object EmptyList extends MyList[Nothing] {
   def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
 }
 
-class List[+A](h: A, n: MyList[A]) extends MyList[A] {
+case class List[+A](h: A, n: MyList[A]) extends MyList[A] {
   override def head: A = h
   override def next: MyList[A] = n
   override def isEmpty: Boolean = false
@@ -111,4 +111,10 @@ object listTest extends App {
   println(listOfIntegers.flatMap(transformer = new MyTransformer[Int, MyList[Int]] {
     override def transform(a: Int): MyList[Int] = new List(a, new List(a + 1, EmptyList))
   }).toString)
+  
+  // test case class
+  val cloneListOfIntegers: MyList[Int] = new List(1, new List(2, new List(3, EmptyList)))
+  println(cloneListOfIntegers == listOfIntegers)  // output: true, if not, need to write equals recursivly
+  
+  
 }
