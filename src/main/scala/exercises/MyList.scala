@@ -115,6 +115,4 @@ object listTest extends App {
   // test case class
   val cloneListOfIntegers: MyList[Int] = new List(1, new List(2, new List(3, EmptyList)))
   println(cloneListOfIntegers == listOfIntegers)  // output: true, if not, need to write equals recursivly
-  
-  
 }
