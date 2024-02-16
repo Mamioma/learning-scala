@@ -99,20 +99,14 @@ object listTest extends App {
   println(listOfIntegers.add(4).toString)
 
   val anotherListOfIntegers: MyList[Int] = new List(4, new List(5, EmptyList))
-  println(listOfIntegers.filter(new Function1[Int, Boolean] {
-    override def apply(t: Int): Boolean = t % 2 == 0
-  }).toString)
+  println(listOfIntegers.filter(elem => elem % 2 == 0).toString)
 
-  println(listOfIntegers.map(new Function1[Int, Int] {
-    override def apply(elem: Int): Int = elem * 2
-  }).toString)
+  println(listOfIntegers.map(elem => elem * 2).toString)
 
   println((listOfIntegers ++ anotherListOfIntegers).toString)
 
-  println(listOfIntegers.flatMap(new Function1[Int, MyList[Int]] {
-    override def apply(a: Int): MyList[Int] = new List(a, new List(a + 1, EmptyList))
-  }).toString)
-  
+  println(listOfIntegers.flatMap(elem => new List(elem, new List(elem + 1, EmptyList))).toString)
+
   // test case class
   val cloneListOfIntegers: MyList[Int] = new List(1, new List(2, new List(3, EmptyList)))
   println(cloneListOfIntegers == listOfIntegers)  // output: true, if not, need to write equals recursivly
