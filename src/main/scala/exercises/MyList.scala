@@ -28,6 +28,10 @@ abstract class MyList[+A] {
   def filter(predicate: A => Boolean): MyList[A]
   def flatMap[B](transformer: A => MyList[B]): MyList[B]
   def ++[B >: A](list: MyList[B]): MyList[B]
+  def foreach(f: A => Unit): Unit
+  def sort(compare: (A, A) => Int): MyList[A]
+  def zipWith[B, C](list: MyList[B], f: (A, B) => C): MyList[C]
+  def fold[B >: A](start: B)(f: (A, B) => B): B
 }
 
 case object EmptyList extends MyList[Nothing] {
@@ -41,6 +45,16 @@ case object EmptyList extends MyList[Nothing] {
   def filter(predicate: Nothing => Boolean): MyList[Nothing] = EmptyList
   def flatMap[B](transformer: Nothing => MyList[B]): MyList[B] = EmptyList
   def ++[B >: Nothing](list: MyList[B]): MyList[B] = list
+  override def foreach(f: Nothing => Unit): Unit = ()
+
+  override def sort(compare: (Nothing, Nothing) => Int): MyList[Nothing] = EmptyList
+
+  override def zipWith[B, C](list: MyList[B], f: (Nothing, B) => C): MyList[C] = {
+    if (list.isEmpty) EmptyList
+    else throw new RuntimeException("Cannot zip a list with an empty list")
+  }
+
+  override def fold[B >: Nothing](start: B)(f: (Nothing, B) => B): B = start
 }
 
 case class List[+A](h: A, n: MyList[A]) extends MyList[A] {
@@ -88,6 +102,31 @@ case class List[+A](h: A, n: MyList[A]) extends MyList[A] {
   override def flatMap[B](transformer: A => MyList[B]): MyList[B] = {
     transformer(h) ++ n.flatMap(transformer)
   }
+
+  override def foreach(f: A => Unit): Unit =
+    f(h)
+    n.foreach(f)
+
+  override def sort(compare: (A, A) => Int): MyList[A] = {
+    def insert(h: A, sortedTail: MyList[A]): MyList[A] = {
+      if (sortedTail.isEmpty) new List(h, EmptyList)
+      else if ((compare(h, sortedTail.head)) < 0) new List(h, sortedTail)
+      else new List(sortedTail.head, insert(h, sortedTail.next))
+    }
+
+    val sortedTail = n.sort(compare)
+    insert(h, sortedTail)
+  }
+
+  override def zipWith[B, C](list: MyList[B], f: (A, B) => C): MyList[C] = {
+    if (list.isEmpty) new List(f(h, list.head), EmptyList)
+    else new List(f(h, list.head), n.zipWith(list.next, f))
+  }
+
+  override def fold[B >: A](start: B)(f: (A, B) => B): B = {
+    if (n.isEmpty) f(h, start)
+    else n.fold(f(h, start))(f)
+  }
 }
 
 object listTest extends App {
@@ -98,7 +137,7 @@ object listTest extends App {
   println(listOfStrings.toString)
   println(listOfIntegers.add(4).toString)
 
-  val anotherListOfIntegers: MyList[Int] = new List(4, new List(5, EmptyList))
+  val anotherListOfIntegers: MyList[Int] = new List(4, new List(5, new List(6, EmptyList)))
   println(listOfIntegers.filter(elem => elem % 2 == 0).toString)
 
   println(listOfIntegers.map(elem => elem * 2).toString)
@@ -110,4 +149,13 @@ object listTest extends App {
   // test case class
   val cloneListOfIntegers: MyList[Int] = new List(1, new List(2, new List(3, EmptyList)))
   println(cloneListOfIntegers == listOfIntegers)  // output: true, if not, need to write equals recursivly
+
+  // test for each
+  listOfIntegers.foreach((x: Int) => println(x))
+
+  listOfIntegers.sort((x: Int, y: Int) => y - x).foreach((x: Int) => println(x))
+  
+  println(listOfIntegers.zipWith(anotherListOfIntegers, (x, y) => x * y).toString)
+  
+  println(listOfIntegers.fold(0)((x, y) => x + y).toString)
 }
