@@ -1,3 +1,4 @@
-[debug] not up to date. inChanged = true, force = false
-[debug] Updating ProjectRef(uri("file:/Users/mingyongma/Desktop/study/工作/scala/learning-scala/"), "root")...
-[debug] Done updating ProjectRef(uri("file:/Users/mingyongma/Desktop/study/工作/scala/learning-scala/"), "root")
+[warn] scala3-library_3-3.0.2-sources.jar no longer exists at /Users/mingyongma/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.0.2/scala3-library_3-3.0.2-sources.jar
+[debug] not up to date. inChanged = false, force = false
+[debug] Updating ProjectRef(uri("file:/Users/mingyongm/Desktop/project/learning-scala/"), "root")...
+[debug] Done updating ProjectRef(uri("file:/Users/mingyongm/Desktop/project/learning-scala/"), "root")
