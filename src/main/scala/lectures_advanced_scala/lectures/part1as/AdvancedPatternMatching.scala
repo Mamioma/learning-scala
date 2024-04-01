@@ -3,10 +3,8 @@ package lectures_advanced_scala.lectures.part1as
 object AdvancedPatternMatching extends App {
 
   val numbers = List(1)
-  val description = numbers match {
-    case head :: Nil => println(s"the only element is $head.")
-    case _ =>
-  }
+  
+  
 
   /*
     - constants
